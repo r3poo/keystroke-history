@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         self.trayIcon.activated.connect(self.show)
         self.trayIcon.show()
         
-        self.strokes = []
+        self.strokes: list[str] = []
         self.keyboard_listener = keyboard.Listener(on_press=self.on_keypress)
         self.mouse_listener = mouse.Listener(on_click=self.on_mouseclick)
         
@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         buttonLayout.addWidget(stopButton)
         
         clearButton = QPushButton("clear")
-        clearButton.clicked.connect(self.strokes.clear)
+        clearButton.clicked.connect(self.clearButtonPressed)
         buttonLayout.addWidget(clearButton)
         
         saveButton = QPushButton("save")
@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
     
     def clearButtonPressed(self):
         self.strokes.clear()
-        self.statusLabel.setText('cleared history')
+        self.savedLabel.setText('cleared history')
     
     def saveHist(self):
         if getattr(sys, 'frozen', False):
@@ -114,15 +114,22 @@ class MainWindow(QMainWindow):
         self.statusLabel.setText("NOT RECORDING")
         
     def saveButtonPressed(self):
+        self.stopButtonPressed()
         filePath = self.saveHist()
         if filePath is not None:
             self.savedLabel.setText(f'{self.ts()} - saved to {filePath}')
         else:
             self.savedLabel.setText(f'{self.ts()} - could not save to {filePath}')
+        self.startButtonPressed()
     
 
     def closeEvent(self, event):
-        if self.strokes!=[]:
+        justLeftClickOrEmpty = True
+        for stroke in self.strokes:
+            if not stroke.strip().endswith('Button.left'):
+                justLeftClickOrEmpty = False
+        
+        if not justLeftClickOrEmpty:
             from PyQt6.QtWidgets import QMessageBox
             reply = QMessageBox.question(
                 self, "Unsaved Log",
