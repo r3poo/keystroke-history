@@ -5,4 +5,9 @@ By using code from this repository, you agree to only use it for educational pur
 
 Basic keylogger, with plain text log file.
 
-To run, install dependencies in `requirements.txt` and run kl.py with python
+## Usage
+### Either
+Install dependencies in `requirements.txt` and run kl.py with python
+### Or
+Download [latest release](https://github.com/r3poo/keystroke-history/releases/latest) and run `kl.exe`
+

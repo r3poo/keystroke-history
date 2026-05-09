@@ -1,5 +1,6 @@
-build
-dist
+**build
+**dist
 kl.spec
 logged_keys.txt
 kl.zip
+keylogenv
